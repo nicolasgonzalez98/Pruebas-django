@@ -1,0 +1,24 @@
+{% extends "myapp/layout.html" %}
+
+{% block title %}
+Lista de aeropuertos
+{% endblock %}
+
+{% block content %}
+
+    <table style="border: 1px solid">
+        <thead>
+            <tr>
+            <th>Aeropuerto</th>
+            <th>Ciudad</th>
+            <th>País</th>
+            </tr>
+        </thead>
+        {% for (nombre, ciudad, pais) in alumnos %}
+        <tr>
+            <td>{nombre}</td>
+            <td>{ciudad}</td>
+            <td>{pais}</td>
+        </tr>
+    </table>     
+{% endblock %}

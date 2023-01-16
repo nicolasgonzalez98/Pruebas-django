@@ -1,0 +1,29 @@
+{% extends "myapp/layout.html" %}
+
+{% load static %}
+    <!-- Ejemplo para IF -->
+    <!-- ¡<strong>Hola</strong>, <em>{{ nombre }}</em>!
+    {% if cursos > 0 %}
+    Hiciste {{ cursos }} cursos.
+    {% else %}
+    No hiciste ningún curso todavía.    
+    {% endif %} -->
+    <!-- Ejemplo para for -->
+    {% block title %}
+    Lista de alumnos
+    {% endblock %}
+    {% block content %}
+    <h1>Lista de alumnos</h1>
+    <ul>
+        {% for alumno in alumnos %}
+            <li>{{ alumno }}</li>
+        {% endfor %}
+    </ul> 
+    <!-- URLS -->
+    <a href='{% url "aeropuertos" %}'>Ver aeropuertos</a>
+
+    <h2>Campeones del mundo</h2>
+
+    <img src='{% static "myapp/messi.jpg" %}' /> 
+
+    {% endblock %}
