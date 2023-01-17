@@ -1,0 +1,14 @@
+<html>
+    <p>Se ha ingresado correctamente la siguiente película:</p>
+    <p>Nombre: {{ pelicula.nombre }}.</p>
+    <p>Fecha de estreno: {{ pelicula.fecha_estreno }}.</p>
+    <p>Para mayores de {{ pelicula.edad_minima }} años.</p>
+    <p>
+        Preventa online:
+        {% if pelicula.preventa_online %}
+        Sí.
+        {% else %}
+        No.
+        {% endif %}
+    </p>
+</html>

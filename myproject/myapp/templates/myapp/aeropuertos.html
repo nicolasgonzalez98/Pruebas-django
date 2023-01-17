@@ -14,11 +14,13 @@ Lista de aeropuertos
             <th>País</th>
             </tr>
         </thead>
-        {% for (nombre, ciudad, pais) in alumnos %}
+        {% for a in aeropuertos %}
         <tr>
-            <td>{nombre}</td>
-            <td>{ciudad}</td>
-            <td>{pais}</td>
+            <td>{{ a.nombre }}</td>
+            <td>{{a.ciudad}}</td>
+            <td>{{a.pais}}</td>
         </tr>
+
+        {% endfor %}
     </table>     
 {% endblock %}

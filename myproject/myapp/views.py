@@ -1,7 +1,10 @@
 from django.shortcuts import render
-from django.http import HttpResponse, JsonResponse
-import sqlite3
+from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http404
 import requests
+from . import forms
+from django.urls import reverse
+from .models import Curso
+
 
 # Create your views here.
 
@@ -25,38 +28,21 @@ def acerca_de ( request ):
     return HttpResponse( "¡Curso de Python y Django!" )
 
 def cursos ( request ):
-    conn = sqlite3.connect( "cursos.db" )
-    cursor = conn.cursor()
-    cursor.execute( "SELECT nombre, inscriptos FROM cursos" )
-    html = """
-        <html>
-        <title>Lista de cursos</title>
-        <table style="border: 1px solid">
-        <thead>
-        <tr>
-        <th>Curso</th>
-        <th>Inscriptos</th>
-        </tr>
-        </thead>
-    """
-    for (nombre, inscriptos) in cursor.fetchall():
-        html += f"""
-        <tr>
-        <td> { nombre } </td>
-        <td> { inscriptos } </td>
-        </tr>
-        """
-        html += "</table></html>"
-    conn.close()
-    return HttpResponse(html)
+    cursos = Curso.objects.all()
+    ctx = {"cursos": cursos}
+    return render(request, "myapp/cursos.html", ctx)
 
 def cursos_json ( request ):
-    conn = sqlite3.connect( "cursos.db" )
-    cursor = conn.cursor()
-    cursor.execute( "SELECT nombre, inscriptos FROM cursos" )
-    response = JsonResponse(cursor.fetchall(), safe = False )
-    conn.close()
+    response = JsonResponse(list(Curso.objects.values()), safe=False)
     return response
+
+def curso_name(request, nombre_curso):
+    try:
+        curso = Curso.objects.get(nombre=nombre_curso)
+    except Curso.DoesNotExist:
+        raise Http404
+    ctx = {"curso": curso}
+    return render(request, "myapp/curso.html", ctx)
 
 def cotizacion_dolar(request):
     r = requests.get("https://api.recursospython.com/dollar")
@@ -73,35 +59,22 @@ def cotizacion_dolar(request):
 
 def aeropuertos( request ):
     f = open('aeropuertos.csv', encoding="utf8")
-
-    html = """
-        <html>
-        <title>Lista de aeropuertos</title>
-        <table style="border: 1px solid">
-          <thead>
-            <tr>
-              <th>Aeropuerto</th>
-              <th>Ciudad</th>
-              <th>País</th>
-            </tr>
-          </thead>
-    """
+    data = {'aeropuertos':[]}
+    
 
     for linea in f:
         r = linea.split(',')
         nombre = r[1].replace('"', '')
         ciudad = r[2].replace('"', '')
         pais = r[3].replace('"', '')
-        html += f'''
-            <tr>
-                <td>{nombre}</td>
-                <td>{ciudad}</td>
-                <td>{pais}</td>
-            </tr>
-        '''
+        data['aeropuertos'].append({
+            'nombre':r[1].replace('"', ''),
+            'ciudad':r[2].replace('"', ''),
+            'pais':r[3].replace('"', '')
+        })
     f.close()
-    html += "</table></html>"
-    return HttpResponse(html)
+    
+    return render(request, 'myapp/aeropuertos.html', data)
 
 def aeropuertos_json(request):
     f = open('aeropuertos.csv', encoding="utf8")
@@ -119,3 +92,29 @@ def aeropuertos_json(request):
         
     f.close()
     return JsonResponse(aeropuertos, safe=False)
+
+def peliculas(request, nombre_pelicula, nro_comentario):
+    html = f'Comentario numero {nro_comentario} de la pelicula {nombre_pelicula}'
+    return HttpResponse(html)
+
+def nuevo_curso(request):
+    if request.method == "POST":
+        form = forms.FormularioCurso(request.POST)
+        if form.is_valid():
+            Curso.objects.create( nombre=form.cleaned_data["nombre"], inscriptos=form.cleaned_data["inscriptos"] )
+            return HttpResponseRedirect(reverse("cursos"))
+    else:
+        form = forms.FormularioCurso()
+    ctx = {"form": form}
+    return render(request, "myapp/nuevo_curso.html", ctx)
+
+def nueva_pelicula(request):
+    if request.method == "POST":
+        form = forms.FormularioPelicula(request.POST)
+        if form.is_valid():
+            ctx = {"pelicula": form.cleaned_data}
+            return render(request,'myapp/datos_pelicula.html', ctx)
+    else:
+        form = forms.FormularioPelicula()
+    ctx = {"form": form}
+    return render(request, "myapp/nueva_pelicula.html", ctx)
