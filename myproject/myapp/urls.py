@@ -12,5 +12,6 @@ urlpatterns = [
     path('aeropuertos/json', views.aeropuertos_json, name='aeropuertos_json'),
     path('peliculas/<str:nombre_pelicula>/comentarios/<int:nro_comentario>', views.peliculas, name='peliculas'),
     path('nuevo-curso', views.nuevo_curso, name='nuevo-curso'),
-    path('nueva-pelicula', views.nueva_pelicula, name='nueva-pelicula')
+    path('nueva-pelicula', views.nueva_pelicula, name='nueva-pelicula'),
+    path('instructores', views.instructores, name='instructores')
 ]

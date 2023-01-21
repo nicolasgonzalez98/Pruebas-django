@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse, HttpResponseRedirect, Http40
 import requests
 from . import forms
 from django.urls import reverse
-from .models import Curso
+from .models import Curso, Instructor
 
 
 # Create your views here.
@@ -101,7 +101,7 @@ def nuevo_curso(request):
     if request.method == "POST":
         form = forms.FormularioCurso(request.POST)
         if form.is_valid():
-            Curso.objects.create( nombre=form.cleaned_data["nombre"], inscriptos=form.cleaned_data["inscriptos"] )
+            form.save()
             return HttpResponseRedirect(reverse("cursos"))
     else:
         form = forms.FormularioCurso()
@@ -118,3 +118,8 @@ def nueva_pelicula(request):
         form = forms.FormularioPelicula()
     ctx = {"form": form}
     return render(request, "myapp/nueva_pelicula.html", ctx)
+
+def instructores(request):
+    datos = Instructor.objects.all()
+    ctx = {"instructores": datos}
+    return render(request, "myapp/instructores.html", ctx)

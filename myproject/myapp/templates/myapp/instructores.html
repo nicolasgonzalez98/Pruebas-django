@@ -1,0 +1,17 @@
+<table>
+    <h1>Instructores</h1>
+    <tr>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Cursos asignados</th>
+    </tr>
+    {% for i in instructores %}
+
+    <tr>
+        <td>{{i.nombre}}</td>
+        <td>{{i.email}}</td>
+        <td>{{i.cursos_asignados}}</td>
+    </tr>
+
+    {% endfor %}
+</table>
