@@ -5,6 +5,13 @@ class Profesor(models.Model):
     nombre = models.CharField(max_length=128)
     monotributista = models.BooleanField()
 
+    def __str__(self):
+        return self.nombre
+
+
+    class Meta:
+        verbose_name_plural = "Profesores"
+
 class Curso(models.Model):
     nombre = models.CharField('Nombre',max_length=128)
     inscriptos = models.IntegerField("Inscriptos")
@@ -15,6 +22,14 @@ class Curso(models.Model):
     )
     turno = models.PositiveSmallIntegerField("Turno", choices=TURNOS, null=True)
     profesor = models.ForeignKey(Profesor, on_delete=models.SET_NULL, null=True, related_name="cursos")
+
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        verbose_name_plural = 'Cursos'
+
+    
 
 class Instructor(models.Model):
     nombre = models.CharField(max_length=128)

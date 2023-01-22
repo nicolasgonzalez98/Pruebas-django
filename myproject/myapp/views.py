@@ -44,6 +44,11 @@ def curso_name(request, nombre_curso):
     ctx = {"curso": curso}
     return render(request, "myapp/curso.html", ctx)
 
+def cursos_por_turno(request, turno):
+    turnos = ['manana', 'tarde', 'noche']
+    ctx = {'cursos': Curso.objects.filter(turno=turnos.index(turno)+1)}
+    return render(request, 'myapp/cursos.html', ctx)
+
 def cotizacion_dolar(request):
     r = requests.get("https://api.recursospython.com/dollar")
     response = r.json()

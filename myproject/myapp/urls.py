@@ -4,6 +4,7 @@ from . import views
 urlpatterns = [
     path( "" , views.index, name = "index" ),
     path( "acerca-de" , views.acerca_de, name = "acerca_de" ),
+    path("cursos/turno-<str:turno>", views.cursos_por_turno, name='por_turno'),
     path( "cursos" , views.cursos, name = "cursos" ),
     path( "cursos/json" , views.cursos_json, name = "cursos_json" ),
     path("cursos/<str:nombre_curso>", views.curso_name, name='curso_nombre'),
@@ -13,5 +14,6 @@ urlpatterns = [
     path('peliculas/<str:nombre_pelicula>/comentarios/<int:nro_comentario>', views.peliculas, name='peliculas'),
     path('nuevo-curso', views.nuevo_curso, name='nuevo-curso'),
     path('nueva-pelicula', views.nueva_pelicula, name='nueva-pelicula'),
-    path('instructores', views.instructores, name='instructores')
+    path('instructores', views.instructores, name='instructores'),
+    
 ]
